@@ -49,9 +49,10 @@ python "<script_name>.py"
 If you use this dataset to support your research and publish a paper, we encourage you to cite the following BibTex in your publication:
 
 ```
-@article{sutoyo2026selffixedatd,
-  title={The Dangers of Non--Self-Fixed Architecture Technical Debt and Its Impact on Time-to-Fix},
+@article{sutoyo2026dangers,
+  title={The Dangers of Non-Self-Fixed Architecture Technical Debt and Its Impact on Time-to-Fix},
   author={Sutoyo, Edi and Avgeriou, Paris and Capiluppi, Andrea},
+  journal={arXiv preprint arXiv:2605.16133},
   year={2026}
 }
 ```

@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 # coding: utf-8
 """
-Generate 3 boxplot PDFs untuk RQ3 dengan transformasi log10(1+x) pada data,
+Generate 4 boxplot PDFs untuk RQ3 dengan transformasi log10(1+x) pada data,
 dan sumbu Y tetap linear:
 
-1) rq3_box_lines_changed.pdf   -> log10(1 + Lines_Changed_Total) (self vs non-self)
-2) rq3_box_commits_total.pdf   -> log10(1 + Num_Commits_Total)  (self vs non-self)
-3) rq3_box_devs_total.pdf      -> log10(1 + Num_Devs_Total)     (self vs non-self)
+1) rq3_box_change_breadth.pdf  -> log10(1 + Change_Breadth)       (self vs non-self)
+2) rq3_box_lines_changed.pdf   -> log10(1 + Lines_Changed_Total)  (self vs non-self)
+3) rq3_box_commits_total.pdf   -> log10(1 + Num_Commits_Total)    (self vs non-self)
+4) rq3_box_devs_total.pdf      -> log10(1 + Num_Devs_Total)       (self vs non-self)
+
+Catatan:
+- Alur/logika plotting lama dipertahankan.
+- Change_Breadth hanya ditambahkan sebagai satu metrik/boxplot baru.
+- Statistik pada boxplot ditampilkan pada skala log10(1+x), sama seperti metrik lama.
 """
 
 import pandas as pd
@@ -28,13 +34,14 @@ plt.rcParams.update({
 # ===================== CONFIG =====================
 
 DATA_CSV = Path(
-    "/media/edsu/Drive-D2/Python/SEL-FIXED-ATD/ISSUES_with_LevelItem_LevelProcess.csv"
+    "/media/edsu/Drive-D2/Python/ICSA-ATD-Lifecycle-To-Replicate/SIMPLE/ISSUES_with_LevelItem_LevelProcess_PLUS_ChangeBreadth.csv"
 )
 
 # kolom untuk identitas self-fixed
 COL_SELF_RAW = "Is Self-Fixed (Intro=Payment)"
 
 # nama kolom metrik yang mau diplot
+COL_BREADTH = "Change_Breadth"
 COL_LINES   = "Lines_Changed_Total"
 COL_COMMITS = "Num_Commits_Total"
 COL_DEVS    = "Num_Devs_Total"
@@ -164,13 +171,22 @@ def make_two_group_boxplot(
     print(f"[INFO] Saved boxplot to {output_pdf}")
 
 
-# ===================== GENERATE 3 BOXPLOTS =====================
+# ===================== GENERATE 4 BOXPLOTS =====================
 
+OUT_BREADTH = DATA_CSV.with_name("rq3_box_change_breadth.pdf")
 OUT_LINES   = DATA_CSV.with_name("rq3_box_lines_changed.pdf")
 OUT_COMMITS = DATA_CSV.with_name("rq3_box_commits_total.pdf")
 OUT_DEVS    = DATA_CSV.with_name("rq3_box_devs_total.pdf")
 
-# 1) Lines_Changed_Total
+# 1) Change_Breadth
+make_two_group_boxplot(
+    data=df,
+    metric_col=COL_BREADTH,
+    base_ylabel="change breadth (distinct files)",
+    output_pdf=OUT_BREADTH,
+)
+
+# 2) Lines_Changed_Total
 make_two_group_boxplot(
     data=df,
     metric_col=COL_LINES,
@@ -178,7 +194,7 @@ make_two_group_boxplot(
     output_pdf=OUT_LINES,
 )
 
-# 2) Num_Commits_Total
+# 3) Num_Commits_Total
 make_two_group_boxplot(
     data=df,
     metric_col=COL_COMMITS,
@@ -186,7 +202,7 @@ make_two_group_boxplot(
     output_pdf=OUT_COMMITS,
 )
 
-# 3) Num_Devs_Total
+# 4) Num_Devs_Total
 make_two_group_boxplot(
     data=df,
     metric_col=COL_DEVS,
@@ -194,4 +210,4 @@ make_two_group_boxplot(
     output_pdf=OUT_DEVS,
 )
 
-print("[DONE] All RQ3 boxplots generated.")
+print("[DONE] All 4 RQ3 boxplots generated.")
